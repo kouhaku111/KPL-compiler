@@ -135,7 +135,6 @@ void push(int op) {
                             buffer[j++] = line[i++];
                         buffer[j] = '\0';
                         j = 0;
-                        //if(strcmp(buffer, "At")) printf("haha\n");
                         to_lower(buffer);
                         if(!check_stop_token(buffer)) {
                             if(!check_proNoun(buffer)) {
@@ -153,8 +152,7 @@ void push(int op) {
                                 }
                             }
                             
-                        }
-                        //buffer[j++] = line[i];    
+                        }  
                     }
                 }
                 else {
