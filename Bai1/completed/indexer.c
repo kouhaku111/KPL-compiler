@@ -1,24 +1,29 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+#define WORD_LENGTH 20
+#define PAGE_LENGTH 100
+#define MAX_LINE_NO 3
+#define MAX_LINE_LENGTH 255
+#define MAX_WORD 30
 
 typedef struct data {
-    char word[20];
+    char word[WORD_LENGTH];
     int num;    // so lan xuat hien
-    char lnum[100][3];  // cac dong xuat hien, toi da co 100 dong
+    char lnum[PAGE_LENGTH][MAX_LINE_NO];  // cac dong xuat hien, toi da co 100 dong
 }token;
 
-token stop_token[30]; // toi da co 30 tu cam
-token proNoun[30];
+token stop_token[MAX_WORD]; // toi da co 30 tu cam
+token proNoun[MAX_WORD];
 int proNoun_range = 0;
 int stop_range = 0;
 
-token hash_token[23][20]; // toi da 20 tu co nghia ung voi cac chu cai dau tu a->z
+token hash_token[23][MAX_WORD]; // toi da 20 tu co nghia ung voi cac chu cai dau tu a->z
 int num[23] = {0};  // so luong tu ung voi cac chu cai dau tu a->z
 
 void init() {
     for(int i = 0; i < 23; i++) {   
-        for (int j = 0; j < 20; j++)
+        for (int j = 0; j < MAX_WORD; j++)
         {
             hash_token[i][j].num = 0;
         }
@@ -53,7 +58,7 @@ int check_proNoun(char buf[]) {
 }
 
 int get_num_line(int p, int k) {
-    for(int i = 0; i < 100; i++) 
+    for(int i = 0; i < PAGE_LENGTH; i++) 
         if(hash_token[p][k].lnum[i][0] == '\0') return i;
 }
 
@@ -63,7 +68,7 @@ void push_hash_list(char buf[], int line_no) {    //  tra ve vi tri tu duoc them
     int range = num[k];
     int w, n;
 
-    char s[3];
+    char s[MAX_LINE_NO];
     sprintf(s, "%d", line_no);  // chuyen so dong sang string
     
     while(i < num[k]) {
@@ -90,8 +95,8 @@ void push_hash_list(char buf[], int line_no) {    //  tra ve vi tri tu duoc them
 }
 
 void push(int op) {
-    char line[255];
-    char buffer[20];
+    char line[MAX_LINE_LENGTH];
+    char buffer[WORD_LENGTH];
     int index = 0;
     int j = 0;
     int line_no = 1;
@@ -99,7 +104,7 @@ void push(int op) {
 
     if(op == 1) {
         FILE *f = fopen("stopw.txt", "r");
-        while(fgets(line, 255, f)) {
+        while(fgets(line, MAX_LINE_LENGTH, f)) {
             for(int i = 0; i < strlen(line); i++) {
                 if(line[i] >= 'a' && line[i] <= 'z') { 
                     buffer[j++] = line[i];
@@ -119,7 +124,7 @@ void push(int op) {
 
     else if(op == 2) {
         FILE *f = fopen("vanban.txt", "r");
-        while(fgets(line, 255, f)) {
+        while(fgets(line, MAX_LINE_LENGTH, f)) {
             for(int i = 0; i < strlen(line); i++) {
                 if((line[i] >= 'a' && line[i] <= 'z')) {    // neu gap ki tu a->z, copy vao buffer
                     buffer[j++] = line[i];
