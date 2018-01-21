@@ -9,8 +9,8 @@ typedef struct data {
 }token;
 
 token stop_token[30]; // toi da co 30 tu cam
-token DTR[30];
-int DTR_range = 0;
+token proNoun[30];
+int proNoun_range = 0;
 int stop_range = 0;
 
 token hash_token[23][20]; // toi da 20 tu co nghia ung voi cac chu cai dau tu a->z
@@ -43,11 +43,11 @@ int check_stop_token(char buf[]) {   // ton tai thi tra lai 1, 0 trong th nguoc 
     return 0;
 }
 
-int check_DTR(char buf[]) {
+int check_proNoun(char buf[]) {
     int i = 0;
 
-    while(i < DTR_range) {
-        if(strcmp(DTR[i++].word, buf) == 0) return 1;
+    while(i < proNoun_range) {
+        if(strcmp(proNoun[i++].word, buf) == 0) return 1;
     }
     return 0;
 }
@@ -138,12 +138,12 @@ void push(int op) {
                         //if(strcmp(buffer, "At")) printf("haha\n");
                         to_lower(buffer);
                         if(!check_stop_token(buffer)) {
-                            if(!check_DTR(buffer)) {
+                            if(!check_proNoun(buffer)) {
                                 printf("%s co phai danh tu rieng khong (1 la dung, 0 la sai):", buffer);
                                 scanf("%d", &choice);
                                 switch (choice) {
                                     case 1:
-                                        strcpy(DTR[DTR_range++].word, buffer);
+                                        strcpy(proNoun[proNoun_range++].word, buffer);
                                         break;
                                     case 0:
                                         push_hash_list(buffer, line_no);
