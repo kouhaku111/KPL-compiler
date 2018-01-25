@@ -42,6 +42,7 @@ void to_lower(char buf[]) {
 int check_stop_token(char buf[]) {   // ton tai thi tra lai 1, 0 trong th nguoc lai
     int i = 0;
 
+    to_lower(buf);
     while(i < stop_range) {
         if(strcmp(stop_token[i++].word, buf) == 0) return 1;
     }
@@ -140,14 +141,16 @@ void push(int op) {
                             buffer[j++] = line[i++];
                         buffer[j] = '\0';
                         j = 0;
-                        to_lower(buffer);
+                        char tmp_buffer[WORD_LENGTH];
+                        strcpy(tmp_buffer, buffer);
+
                         if(!check_stop_token(buffer)) {
-                            if(!check_proNoun(buffer)) {
-                                printf("%s co phai danh tu rieng khong (1 la dung, 0 la sai):", buffer);
+                            if(!check_proNoun(tmp_buffer)) {
+                                printf("%s co phai danh tu rieng khong (1 la dung, 0 la sai):", tmp_buffer);
                                 scanf("%d", &choice);
                                 switch (choice) {
                                     case 1:
-                                        strcpy(proNoun[proNoun_range++].word, buffer);
+                                        strcpy(proNoun[proNoun_range++].word, tmp_buffer);
                                         break;
                                     case 0:
                                         push_hash_list(buffer, line_no);
