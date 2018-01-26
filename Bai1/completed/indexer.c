@@ -18,11 +18,11 @@ token proNoun[MAX_WORD];
 int proNoun_range = 0;
 int stop_range = 0;
 
-token hash_token[23][MAX_WORD]; // toi da 20 tu co nghia ung voi cac chu cai dau tu a->z
-int num[23] = {0};  // so luong tu ung voi cac chu cai dau tu a->z
+token hash_token['z' - 'a'][MAX_WORD]; // toi da 20 tu co nghia ung voi cac chu cai dau tu a->z
+int num['z' - 'a'] = {0};  // so luong tu ung voi cac chu cai dau tu a->z
 
 void init() {
-    for(int i = 0; i < 23; i++) {   
+    for(int i = 0; i < 'z' - 'a'; i++) {   
         for (int j = 0; j < MAX_WORD; j++)
         {
             hash_token[i][j].num = 0;
@@ -201,7 +201,7 @@ void sort(token *t, int k) {
 }
 
 void print() {
-    for(int i = 0; i < 23; i++) {
+    for(int i = 0; i < 'z' - 'a'; i++) {
         if(num[i] != 0) {
             sort(hash_token[i], i);    
             for(int j = 0; j < num[i]; j++) {
