@@ -181,6 +181,15 @@ Token* getToken(void) {
   }
 }
 
+Token* getValidToken(void) {
+    // TODO
+    Token *token = getToken();
+    while(token->tokenType == TK_NONE) {
+      free(token);
+      token = getToken();
+    }
+    return token;
+}
 
 /******************************************************************/
 
