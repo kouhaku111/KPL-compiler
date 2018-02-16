@@ -15,7 +15,7 @@ Token *currentToken;
 Token *lookAhead;
 
 void scan(void) {
-  Token* tmp = currentToken;
+  Token* tmp = currentToken;    // try to figure out what is the role of tmp ?
   currentToken = lookAhead;
   lookAhead = getValidToken();
   free(tmp);
@@ -83,10 +83,20 @@ void compileBlock5(void) {
 
 void compileConstDecls(void) {
   // TODO
+  //assert("Parsing subconstant ....");
+  while(lookAhead->tokenType == TK_IDENT)
+    compileConstDecl();
+  //assert("Subconstant parsed ....");  
 }
 
 void compileConstDecl(void) {
   // TODO
+  //assert("Parsing constant ....");
+  eat(TK_IDENT);
+  eat(SB_EQ);
+  compileConstant();
+  eat(SB_SEMICOLON);
+  //assert("Constant parsed!");
 }
 
 void compileTypeDecls(void) {
@@ -129,10 +139,39 @@ void compileUnsignedConstant(void) {
 
 void compileConstant(void) {
   // TODO
+  //assert("Parsing a constant ....");
+  switch(lookAhead->tokenType) {
+    case SB_PLUS:
+      eat(SB_PLUS);
+      compileConstant2();
+      break;
+    case SB_MINUS:
+      eat(SB_MINUS);
+      compileConstant2();
+      break;
+    case TK_CHAR:
+      eat(TK_CHAR);
+      break;
+    default:
+      compileConstant2();
+      break;
+  }
+  //assert("Constant parsed!");
 }
 
 void compileConstant2(void) {
   // TODO
+  switch(lookAhead->tokenType) {
+    case TK_IDENT:
+      eat(TK_IDENT);
+      break;
+    case TK_NUMBER:
+      eat(TK_NUMBER);
+      break;
+    default:
+      error(ERR_INVALIDCONSTANT, lookAhead->colNo, lookAhead->lineNo);
+      break;
+  }
 }
 
 void compileType(void) {
