@@ -59,35 +59,10 @@ Token* readNumber(void) {
   // TODO
     Token *token = makeToken(TK_NUMBER, lineNo, colNo);
     int i = 0;
-    int k = 0;
     do {
         token->string[i++] = currentChar;
         readChar();
-        if(charCodes[currentChar] == CHAR_PERIOD) {
-          token->tokenType = TK_FLOAT;
-          k += 1;
-          if(k >= 2) error(ERR_INVALIDFLOAT, lineNo, colNo - i);
-        }
-        if(charCodes[currentChar] != CHAR_DIGIT && charCodes[currentChar] != CHAR_SPACE
-          && charCodes[currentChar] != CHAR_PERIOD) 
-          error(ERR_INVALIDFLOAT, lineNo, colNo - i);
         if(i == MAX_IDENT_LEN + 1) error(ERR_IDENTTOOLONG, lineNo, colNo - i);
-    } while(charCodes[currentChar] == CHAR_DIGIT || charCodes[currentChar] == CHAR_PERIOD);
-    return token;
-}
-
-Token * readFloat(void) {
-  // TODO
-    Token *token = makeToken(TK_FLOAT, lineNo, colNo - 1);
-    token->string[0] = '0';
-    token->string[1] = '.';
-    int i = 2;
-    do {
-      token->string[i++] = currentChar;
-      readChar();
-      if(i == MAX_IDENT_LEN + 1) error(ERR_IDENTTOOLONG, lineNo, colNo - i);
-      if(charCodes[currentChar] != CHAR_DIGIT && charCodes[currentChar] != CHAR_SPACE) 
-        error(ERR_INVALIDFLOAT, lineNo, colNo - i + 1);
     } while(charCodes[currentChar] == CHAR_DIGIT);
     return token;
 }
@@ -176,13 +151,9 @@ Token* getToken(void) {
     readChar();
     return token;
   case CHAR_PERIOD:
+    token = makeToken(SB_PERIOD, lineNo, colNo);
     readChar();
-    if(charCodes[currentChar] == CHAR_DIGIT) {
-      return readFloat();
-    } else {
-      readChar();
-      return makeToken(SB_PERIOD, ln, cn);
-    }
+    return token;
   case CHAR_COLON:
     readChar();
     if(charCodes[currentChar] == CHAR_EQ) {
@@ -223,7 +194,6 @@ void printToken(Token *token) {
   case TK_NUMBER: printf("TK_NUMBER(%s)\n", token->string); break;
   case TK_CHAR: printf("TK_CHAR(\'%s\')\n", token->string); break;
   case TK_EOF: printf("TK_EOF\n"); break;
-  case TK_FLOAT: printf("TK_FLOAT(%s)\n", token->string); break;
 
   case KW_PROGRAM: printf("KW_PROGRAM\n"); break;
   case KW_CONST: printf("KW_CONST\n"); break;
