@@ -101,10 +101,20 @@ void compileConstDecl(void) {
 
 void compileTypeDecls(void) {
   // TODO
+  //assert("Parsing subtype ....");
+  while(lookAhead->tokenType == TK_IDENT)
+    compileTypeDecl();
+  //assert("Subtype parsed ....");
 }
 
 void compileTypeDecl(void) {
   // TODO
+  //assert("Parsing type ....");
+  eat(TK_IDENT);
+  eat(SB_EQ);
+  compileType();
+  eat(SB_SEMICOLON);
+  //assert("Type parsed ....");
 }
 
 void compileVarDecls(void) {
@@ -176,10 +186,37 @@ void compileConstant2(void) {
 
 void compileType(void) {
   // TODO
+  switch(lookAhead->tokenType) {
+    case TK_IDENT:
+      eat(TK_IDENT);
+      break;
+    case KW_ARRAY:
+      eat(KW_ARRAY);
+      eat(SB_LSEL);
+      eat(TK_NUMBER);
+      eat(SB_RSEL);
+      eat(KW_OF);
+      compileType();
+      break;
+    default:
+      compileBasicType();
+      break;
+  }  
 }
 
 void compileBasicType(void) {
   // TODO
+  switch(lookAhead->tokenType) {
+    case KW_INTEGER:
+      eat(KW_INTEGER);
+      break;
+    case KW_CHAR:
+      eat(KW_CHAR);
+      break;
+    default:
+      error(ERR_INVALIDTYPE, lookAhead->colNo, lookAhead->lineNo);
+      break;
+  }
 }
 
 void compileParams(void) {
